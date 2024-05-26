@@ -1,0 +1,7 @@
+### Test POST request
+POST http://localhost:8000/invoke-ai
+Content-Type: application/json
+
+{
+  "systemName": "exampleSystemName"
+}

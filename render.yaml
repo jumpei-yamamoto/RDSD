@@ -1,20 +1,14 @@
 services:
   - type: web
-    name: backend
+    name: fullstack-app
     env: python
     plan: free
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: python backend/app.py
+    buildCommand: |
+      cd frontend && npm install && npm run build && cd ..
+      pip install -r backend/requirements.txt
+    startCommand: gunicorn backend.app:app
     envVars:
       - key: API_KEY
         value: "" # 値はRenderのダッシュボードで設定する
-
-  - type: web
-    name: frontend
-    env: static
-    plan: free
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/build
-    envVars:
       - key: REACT_APP_API_BASE_URL
-        value: "" # 値はRenderのダッシュボードで設定する
+        value: https://your-backend-url.onrender.com # ここに実際のバックエンドURLを設定する

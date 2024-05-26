@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: backend
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/app.py
+    envVars:
+      - key: API_KEY
+  - type: web
+    name: frontend
+    env: node
+    plan: free
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && serve -s build
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        value: https://your-backend-url.onrender.com
+    staticPublishPath: frontend/build

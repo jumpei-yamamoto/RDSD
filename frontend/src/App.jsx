@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./App.css"; // スピナーのCSSをインポート
 
 function App() {
   const [features, setFeatures] = useState([]);
@@ -8,11 +9,13 @@ function App() {
   const [additionalFeature, setAdditionalFeature] = useState("");
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [designs, setDesigns] = useState({});
+  const [loading, setLoading] = useState(false); // ローディング状態を管理
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
   console.log("API_BASE_URL:", API_BASE_URL);
 
   const handleAIInvocation = async () => {
+    setLoading(true); // API呼び出し開始時にローディング状態をtrueに
     try {
       const response = await fetch(`${API_BASE_URL}/invoke-ai`, {
         method: "POST",
@@ -31,6 +34,8 @@ function App() {
       setFeatures(result.features);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false); // API呼び出し終了時にローディング状態をfalseに
     }
   };
 
@@ -54,8 +59,9 @@ function App() {
   };
 
   const handleDesignRequest = async () => {
+    setLoading(true); // 設計リクエスト時にもローディング状態を管理
     const designRequests = selectedFeatures.map(async (feature) => {
-      const response = await fetch("http://localhost:8000/design-feature", {
+      const response = await fetch(`${API_BASE_URL}/design-feature`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,6 +88,7 @@ function App() {
     });
 
     setDesigns(newDesigns);
+    setLoading(false); // 設計リクエスト終了時にローディング状態をfalseに
   };
 
   const handleDesignChange = (feature, newText) => {
@@ -131,10 +138,17 @@ function App() {
         <button
           className="bg-blue-500 text-white p-2 rounded font-roboto"
           onClick={handleAIInvocation}
+          disabled={loading}
         >
-          AIを呼び出す
+          {loading ? "Loading..." : "AIを呼び出す"}
         </button>
       </div>
+
+      {loading && (
+        <div className="flex justify-center items-center">
+          <div className="spinner"></div>
+        </div>
+      )}
 
       <div className="mb-4">
         <p className="font-bold font-roboto mb-2">AIの返答:</p>
@@ -213,8 +227,9 @@ function App() {
             <button
               className="mt-4 bg-purple-500 text-white p-2 rounded font-roboto"
               onClick={handleDesignRequest}
+              disabled={loading}
             >
-              設計を依頼
+              {loading ? "Loading..." : "設計を依頼"}
             </button>
           )}
         </div>

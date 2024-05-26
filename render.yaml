@@ -6,7 +6,7 @@ services:
     buildCommand: |
       cd frontend && npm install && npm run build && cd ..
       pip install -r backend/requirements.txt
-    startCommand: python backend/app.py
+    startCommand: gunicorn --chdir backend app:app -b 0.0.0.0:8000
     envVars:
       - key: API_KEY
         value: "" # 値はRenderのダッシュボードで設定する

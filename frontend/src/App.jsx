@@ -100,6 +100,7 @@ function App() {
 
   return (
     <div className="p-4">
+      <h2>昔サンプルで作成したものです。この設計補助機能は雑ですが、洗練させて設計・開発を半自動化させるシステムを作成したいと考えています。一応動作するはずなので触ってみてください</h2>
       <div className="mb-4">
         <label
           htmlFor="systemName"
